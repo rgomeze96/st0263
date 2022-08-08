@@ -1,5 +1,5 @@
 Tópicos de Telemática ST0263
-Labratorio 1
+Laboratorio 1
 Rafael Gomez
 
 Usé https://realpython.com/python-sockets/ para poder construir ese proyecto.
