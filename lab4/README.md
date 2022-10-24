@@ -1,4 +1,5 @@
 Tópicos de Telemática ST0263
+Lab 4
 Rafael Gomez
 
 1. Brief Description:
@@ -111,11 +112,6 @@ Create the configuration file: options-ssl-nginx.conf:
 sudo nano /etc/letsencrypt/options-ssl-nginx.conf
 Copy and paste the following text in the file that was just created:
 
-# This file contains important security parameters. If you modify this file
-# manually, Certbot will be unable to automatically provide future security
-# updates. Instead, Certbot will print and log an error message with a path to
-# the up-to-date file that you will need to refer to when manually updating
-# this file.
 ssl_session_cache shared:le_nginx_SSL:10m;
 ssl_session_timeout 1440m;
 ssl_session_tickets off;
@@ -264,8 +260,8 @@ sudo touch sample1.text sample2.text
 En los wordpress:
 ls -l /mnt/nfs_clientshare/
 The results should be the following:
-Screenshot 2022-10-18 184542.png
-Screenshot 2022-10-18 184610.png
+![image](https://user-images.githubusercontent.com/47034545/197642783-fe93b80e-b794-49e7-82ab-81c472c4315b.png)
+![image](https://user-images.githubusercontent.com/47034545/197642828-826e461c-8a5c-4688-a4c3-a24cc3a63e3e.png)
 
 Configure instance for SQL Database:
 Install docker y docker-compose:
@@ -308,7 +304,7 @@ Execute and start the MySQL container:
 sudo docker-compose up --build -d
 sudo docker exec -it dbserver mysql  -p
 Create the database and users:
-Screenshot 2022-10-18 190436.png
+![image](https://user-images.githubusercontent.com/47034545/197642725-2b547f93-8bf3-450b-8345-d21eb9d65d91.png)
 
 Configuration for the wordpress for each instance:
 
@@ -352,4 +348,4 @@ Execute and run the container:
 sudo docker-compose up --build -d
 
 Now everything should be working, enter https://rgomeze-lab4.tk
-image.png
+![image](https://user-images.githubusercontent.com/47034545/197642647-d64b975c-77a9-43a8-bcc2-e3d542803ec6.png)
