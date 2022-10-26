@@ -11,7 +11,9 @@ Create an SSL certificate for the domain.
 <hr>
 2. General Design Information
 Use Docker containers for the installation of Wordpress, MySQL y Nginx.
+
 ![image](https://user-images.githubusercontent.com/47034545/198078658-cb56fa1a-59b9-4a5c-86c2-d8d9dad3d7a7.png)
+
 <hr>
 
 3. Description and steps for implementing the lab:
@@ -32,7 +34,9 @@ Click on Create Instancia.
 Configure the instance for ec2-micro, Ubuntu 64-bitand allow HTTP y HTTPS traffic.
 Click on Create.
 <hr>
+
 ![image](https://user-images.githubusercontent.com/47034545/198077099-6a2c36d3-f847-4173-b14d-11b0374d5816.png)
+
 <hr>
 Assign an Elastic IP address for each instance:
 Click on Navigation.
@@ -40,21 +44,29 @@ Click on VPC Network.
 Click on IP addresses.
 Click on Reserve External Static Address
 <hr>
+
 ![image](https://user-images.githubusercontent.com/47034545/198077286-0de4432a-2df1-4f75-8ba8-f2cbd2122137.png)
+
 <hr>
 Configure Google Cloud DNS:
 Enter Cloud DNS in the Search Bar.
 Click Create Zone.
+
 ![image](https://user-images.githubusercontent.com/47034545/198077393-73fd5710-493a-4422-9f91-89e62f316b93.png)
+
 <hr>
 Add A and CNAME registers for the domain.
+
 ![image](https://user-images.githubusercontent.com/47034545/198077511-1248878a-6e37-4f77-8a43-275e97e17d4d.png)
+
 <hr>
 Configure nameserver in Freenom for the domain:
 Click on Manage domain
 Click on Management tools -> Nameservers
 Add the NS domains provided by Google Cloud.
+
 ![image](https://user-images.githubusercontent.com/47034545/198077782-22feb8de-f40e-4c08-a787-dbaf2a1d341e.png)
+
 <hr>
 
 #Configure Load Balancer:
@@ -397,4 +409,5 @@ Execute and run the container:
 sudo docker-compose up --build -d
 ```
 Now everything should be working, enter https://rgomeze-lab4.tk
+
 ![image](https://user-images.githubusercontent.com/47034545/197642647-d64b975c-77a9-43a8-bcc2-e3d542803ec6.png)
