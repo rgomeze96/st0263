@@ -268,7 +268,7 @@ http {
 Delete the contents of docker-compose.yml y replace with the following:
 
 ```
-version: '3.1'
+version: '3'
 services:
   nginx:
     container_name: nginx
@@ -454,7 +454,7 @@ Access the folder and create the following file with the following content:
 
 docker-compose.yaml with:
 ```
-version: '3.7'
+version: '3'
 services:
   wordpress:
     container_name: wordpress
