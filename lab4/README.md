@@ -77,11 +77,15 @@ Click on VM Instances.
 Clickon the SSH button.
 2. Install certbot, letsencrypt and nginx:
 Enter the following commands:
+
+```
 sudo apt update
 sudo apt install python3-pip
 sudo -H pip3 install certbot
 sudo apt install letsencrypt -y
 sudo apt install nginx -y
+```
+
 3. Configure the nginx.conf file
 Modify the configuration file:
 
@@ -110,36 +114,46 @@ http {
 }
 ```
 Save the configuration file:
+
 ```
 sudo mkdir -p /var/www/letsencrypt
 sudo nginx -t
 sudo service nginx reload
 ```
+
 4. Create the SSL certificate
 Execute the following commands for the SSL certificate (ej. www):
+
 ```
 sudo letsencrypt certonly -a webroot --webroot-path=/var/www/letsencrypt -m rgomeze@eafit.edu.co --agree-tos -d rgomeze-lab4.tk
 ```
+
 For wildcards enter the following commands:
+
 ```
 sudo certbot --server https://acme-v02.api.letsencrypt.org/directory -d *.rgomeze-lab4.tk --manual --preferred-challenges dns-01 certonly
 ```
+
 IMPORTANT: Must wait until the DNS is updated before hitting enter.
 <hr>
 5. Configuration Files:
 Create a folder for the certificates:
 ```
 mkdir -p nginx/ssl
+```
 Copy the files to the folder that was just created:
-
+```
 sudo su
 cp /etc/letsencrypt/live/rgomeze-lab4.tk/* /home/gomezr6993/nginx/ssl/
 ```
+
 Create the configuration file: options-ssl-nginx.conf:
 ```
 sudo nano /etc/letsencrypt/options-ssl-nginx.conf
 ```
+
 Copy and paste the following text in the file that was just created:
+
 ```
 ssl_session_cache shared:le_nginx_SSL:10m;
 ssl_session_timeout 1440m;
@@ -148,37 +162,49 @@ ssl_protocols TLSv1.2 TLSv1.3;
 ssl_prefer_server_ciphers off;
 ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384";
 ```
+
 Copiar el archivo options-ssl-nginx.conf:
+
 ```
 cp /etc/letsencrypt/options-ssl-nginx.conf /home/gomezr6993/nginx/ssl/
 ```
+
 Access the directory nginx/ssl and copy the filess-dhparams.pem:
+
 ```
 cd nginx/ssl
 openssl dhparam -out ssl-dhparams.pem 512
 ```
+
 Run the following commands:
+
 ```
 DOMAIN='rgomeze-lab4.tk' bash -c 'cat /etc/letsencrypt/live/$DOMAIN/fullchain.pem /etc/letsencrypt/live/$DOMAIN/privkey.pem > /etc/letsencrypt/$DOMAIN.pem'
 cp /etc/letsencrypt/live/rgomeze-lab4.tk/* /home/gomezr6993/nginx/ssl/
 exit
 ```
+
 <hr>
 6. Docker configuration
 Instalar docker, docker-compose y git:
+
 ```
 sudo apt install docker.io -y
 sudo apt install docker-compose -y
 sudo apt install git -y
 ```
+
 Initialize and run Docker:
+
 ```
 sudo systemctl enable docker
 sudo systemctl start docker
 sudo usermod -a -G docker sceballosp
 sudo reboot
 ```
+
 Clone the repo from the professor:
+
 ```
 git clone https://github.com/st0263eafit/st0263-2022-2.git
 cd st0263-2022-2/docker-nginx-wordpress-ssl-letsencrypt
@@ -186,14 +212,18 @@ sudo cp docker-compose.yml /home/sceballosp/nginx
 sudo cp nginx.conf /home/sceballosp/nginx
 sudo cp ssl.conf /home/sceballosp/nginx
 ```
+
 Detener nginx:
+
 ```
 ps ax | grep nginx
 netstat -an | grep 80
 sudo systemctl disable nginx
 sudo systemctl stop nginx
 ```
+
 Delete the contents of the file and paste the following text: (change the IPs to wordpress instances, private not public IPs)
+
 ```
 worker_processes auto;
 error_log /var/log/nginx/error.log;
@@ -234,7 +264,9 @@ http {
   }
 }
 ```
+
 Delete the contents of docker-compose.yml y replace with the following:
+
 ```
 version: '3.1'
 services:
@@ -249,32 +281,44 @@ services:
     - 80:80
     - 443:443
 ```
+
 Then initialize and start Docker:
+
 ```
 docker-compose up --build -d
 ```
+
 <hr>
 NFS Server Configuration:
 1. Install NFS server:
+
 ```
 sudo apt update
 sudo apt install nfs-kernel-server
 ```
+
 Create folder for NFS file transfers
+
 ```
 sudo mkdir -p /mnt/nfs_share
 sudo chown -R nobody:nogroup /mnt/nfs_share/
 sudo chmod 777 /mnt/nfs_share/
 ```
+
 Access exports file:
+
 ```
 sudo nano /etc/exports
 ```
+
 Add the following content to the end of the previous file: 
+
 ```
 /mnt/nfs_share 10.128.0.0/20(rw,sync,no_subtree_check)
 ```
+
 Update the firewall rules for the NFS server:
+
 ```
 sudo exportfs -a
 sudo systemctl restart nfs-kernel-server
@@ -282,27 +326,38 @@ sudo ufw allow from 10.128.0.0/20 to any port nfs
 sudo ufw enable
 sudo ufw status
 ```
+
 2. Install NFS on the Wordpress Instances:
+
 ```
 sudo apt update
 sudo apt install nginx -y
 ```
+
 Install NFS for each instance:
+
 ```
 sudo apt install nfs-common -y
 ```
+
 Access the fstab file in the directory: /etc/fstab and add the following line:
+
 ```
 10.128.0.10:/mnt/nfs_share /var/www/html nfs auto 0 0
 ```
+
 Create folder to locate the files to be shared in both instances:
+
 ```
 sudo mkdir -p /mnt/nfs_clientshare
 ```
+
 Connect both instances to the NFS server:
+
 ```
 sudo mount 10.128.0.10:/mnt/nfs_share /mnt/nfs_clientshare
 ```
+
 Verify that everything is working well:
 
 In the NFS server:
@@ -312,6 +367,7 @@ sudo touch sample1.text sample2.text
 En los wordpress:
 ls -l /mnt/nfs_clientshare/
 ```
+
 The results should be the following:
 ![image](https://user-images.githubusercontent.com/47034545/197642783-fe93b80e-b794-49e7-82ab-81c472c4315b.png)
 ![image](https://user-images.githubusercontent.com/47034545/197642828-826e461c-8a5c-4688-a4c3-a24cc3a63e3e.png)
@@ -322,7 +378,9 @@ Install docker y docker-compose:
 sudo apt install docker.io -y
 sudo apt install docker-compose -y
 ```
+
 Create a folder for the Docker container config:
+
 ```
 mkdir Docker
 ```
@@ -351,15 +409,21 @@ services:
 volumes:
   schemas: {}
 ```
+
 Initialize and enable Docker:
+
 ```
 sudo systemctl enable docker
 sudo systemctl start docker
 sudo usermod -a -G docker gomezr6993
-Execute and start the MySQL container:
+```
 
+Execute and start the MySQL container:
+```
 sudo docker-compose up --build -d
 sudo docker exec -it dbserver mysql  -p
+```
+
 Create the database and users:
 ![image](https://user-images.githubusercontent.com/47034545/197642725-2b547f93-8bf3-450b-8345-d21eb9d65d91.png)
 
@@ -367,6 +431,7 @@ Configuration for the wordpress for each instance:
 
 Install docker y docker-compose:
 
+```
 sudo apt install docker.io -y
 sudo apt install docker-compose -y
 
@@ -378,9 +443,12 @@ Stop the NGINX service:
 sudo systemctl disable nginx
 sudo systemctl stop nginx
 ```
+
 Create a folder for the docker configuration:
 
+```
 mkdir Docker
+```
 
 Access the folder and create the following file with the following content:
 
@@ -405,9 +473,11 @@ volumes:
   wordpress:
 ```
 Execute and run the container:
+
 ```
 sudo docker-compose up --build -d
 ```
+
 Now everything should be working, enter https://rgomeze-lab4.tk
 
 ![image](https://user-images.githubusercontent.com/47034545/197642647-d64b975c-77a9-43a8-bcc2-e3d542803ec6.png)
