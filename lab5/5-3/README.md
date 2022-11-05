@@ -1,7 +1,5 @@
 # Lab 5-3
 
-<hr>
-
 To complete lab 5-3 the python library MRJob in order to utilize the MapReduce framework, execute the following commands:
 
 1. Create a python virtual environment:
@@ -31,7 +29,6 @@ We will use the files provided by the professor in order to complete the lab.
 
 # Part 1
 
-<hr>
 We will use the dataset dataempleados.txt for the following commands:
 
 ### 1.1 Annual Salary of employees based on Socioeconomic status
